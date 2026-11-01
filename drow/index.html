@@ -1,0 +1,856 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#fff5e9">
+<title>Little Artist - Kids Drawing Studio</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+  --pink: #ff779f;
+  --purple: #9574e8;
+  --yellow: #ffe39a;
+  --bg: #fff8ed;
+  --ink: #554966;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Trebuchet MS", Arial, sans-serif;
+  overflow-x: hidden;
+}
+
+button, input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+header {
+  background: white;
+  min-height: 68px;
+  padding: 12px clamp(14px, 4vw, 55px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 3px 15px #654e7210;
+}
+
+.logo {
+  color: var(--pink);
+  font-size: clamp(20px, 2.5vw, 28px);
+  font-weight: 900;
+}
+
+.logo span {
+  color: var(--purple);
+}
+
+.header-label {
+  background: #f4edff;
+  color: #8665ce;
+  padding: 9px 14px;
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.container {
+  width: min(1500px, 100%);
+  margin: auto;
+  padding: 24px clamp(12px, 2.5vw, 35px);
+}
+
+.hero {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.hero h1 {
+  color: #8161cd;
+  font-size: clamp(24px, 3vw, 36px);
+  margin-bottom: 8px;
+}
+
+.hero p {
+  color: #a28fa5;
+  font-size: 14px;
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(240px, 285px) minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.panel, .stage {
+  background: white;
+  border: 2px solid #f4eafa;
+  border-radius: 20px;
+  box-shadow: 0 5px 22px #5942680c;
+}
+
+.panel {
+  padding: 19px;
+}
+
+.section {
+  margin-bottom: 23px;
+}
+
+.section h3 {
+  font-size: 13px;
+  color: #9876d7;
+  margin-bottom: 13px;
+  letter-spacing: .4px;
+}
+
+.colors {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.swatch {
+  aspect-ratio: 1;
+  width: 100%;
+  border: 3px solid white;
+  border-radius: 50%;
+  box-shadow: 0 1px 5px #0002;
+  min-width: 0;
+  transition: transform .15s;
+}
+
+.swatch:active {
+  transform: scale(.9);
+}
+
+.swatch.active {
+  outline: 3px solid #9473dc;
+}
+
+.custom-color {
+  margin-top: 12px;
+}
+
+input[type="color"] {
+  width: 100%;
+  height: 42px;
+  background: white;
+  border: 0;
+  cursor: pointer;
+}
+
+.control-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+input[type="range"] {
+  width: 100%;
+  accent-color: var(--purple);
+  min-height: 25px;
+  cursor: pointer;
+}
+
+.tools {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.btn {
+  min-height: 43px;
+  padding: 10px;
+  border: 0;
+  border-radius: 11px;
+  background: #f2eaff;
+  color: #7655b5;
+  font-weight: bold;
+  font-size: 13px;
+  transition: .15s;
+}
+
+.btn.active {
+  background: var(--purple);
+  color: white;
+}
+
+.btn:active, .primary:active {
+  transform: scale(.97);
+}
+
+.pages {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.page-btn {
+  background: #fff9ff;
+  border: 2px solid #f1e7f8;
+  border-radius: 12px;
+  padding: 9px 4px;
+  min-height: 72px;
+  color: #806e94;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.page-btn span {
+  display: block;
+  font-size: 26px;
+  margin-bottom: 4px;
+}
+
+.page-btn.active {
+  background: #f4edff;
+  border-color: #aa8bea;
+}
+
+.primary {
+  background: var(--pink);
+  color: white;
+  border: 0;
+  width: 100%;
+  min-height: 47px;
+  padding: 12px;
+  border-radius: 12px;
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+.secondary {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.canvas-area {
+  min-width: 0;
+}
+
+.canvas-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.canvas-header h2 {
+  color: #8061c9;
+  font-size: clamp(16px, 2vw, 21px);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.stage {
+  padding: clamp(6px, 1.3vw, 13px);
+  overflow: hidden;
+}
+
+.canvas-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 900 / 670;
+  background: white;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  cursor: crosshair;
+}
+
+.tip {
+  text-align: center;
+  font-size: 12px;
+  color: #a394ad;
+  padding: 14px 5px;
+}
+
+footer {
+  padding: 25px 12px;
+  text-align: center;
+  font-size: 12px;
+  color: #aa9bb1;
+}
+
+/* Tablet */
+@media (max-width: 950px) {
+  .workspace {
+    grid-template-columns: minmax(210px, 250px) minmax(0, 1fr);
+    gap: 13px;
+  }
+
+  .panel {
+    padding: 14px;
+  }
+
+  .colors {
+    gap: 8px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 680px) {
+  header {
+    min-height: 58px;
+  }
+
+  .container {
+    padding: 17px 12px;
+  }
+
+  .hero {
+    margin-bottom: 18px;
+  }
+
+  .workspace {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .canvas-area {
+    width: 100%;
+    order: 1;
+  }
+
+  .panel {
+    width: 100%;
+    order: 2;
+    padding: 16px;
+  }
+
+  .canvas-frame {
+    aspect-ratio: 1 / 1;
+  }
+
+  .canvas-header {
+    align-items: center;
+  }
+
+  .actions .btn {
+    min-height: 40px;
+  }
+
+  .colors {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    gap: 9px;
+  }
+
+  .swatch {
+    min-height: 0;
+  }
+
+  .pages {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .page-btn {
+    min-height: 77px;
+  }
+
+  .section {
+    margin-bottom: 19px;
+  }
+}
+
+/* Small phones */
+@media (max-width: 380px) {
+  .header-label {
+    font-size: 10px;
+    padding: 7px 9px;
+  }
+
+  .logo {
+    font-size: 19px;
+  }
+
+  .hero h1 {
+    font-size: 23px;
+  }
+
+  .canvas-header {
+    align-items: flex-start;
+  }
+
+  .canvas-header h2 {
+    width: 100%;
+  }
+
+  .colors {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+/* Large desktop */
+@media (min-width: 1300px) {
+  .workspace {
+    grid-template-columns: 285px minmax(0, 1fr);
+    gap: 24px;
+  }
+
+  .panel {
+    padding: 22px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">🌈 Little <span>Artist</span></div>
+  <div class="header-label">⭐ MY CREATIVE WORLD</div>
+</header>
+
+<main class="container">
+
+  <div class="hero">
+    <h1>Let's Make Art! 🎨</h1>
+    <p>Pick your favorite colors and create something magical!</p>
+  </div>
+
+  <div class="workspace">
+
+    <aside class="panel">
+
+      <div class="section">
+        <h3>🖍️ PICK YOUR COLOR</h3>
+        <div class="colors" id="colors"></div>
+        <div class="custom-color">
+          <input type="color" id="customColor" value="#ff3b5c">
+        </div>
+      </div>
+
+      <div class="section">
+        <h3>🖌️ BRUSH SIZE</h3>
+        <div class="control-label">
+          <span>Little to Big</span>
+          <b id="sizeText">8 px</b>
+        </div>
+        <input type="range" id="size" min="2" max="45" value="8">
+      </div>
+
+      <div class="section">
+        <h3>✨ DRAWING TOOLS</h3>
+        <div class="tools">
+          <button class="btn active" id="brush">🖌️ Brush</button>
+          <button class="btn" id="eraser">🧽 Eraser</button>
+          <button class="btn" id="bucket">🪣 Fill</button>
+          <button class="btn" id="undo">↶ Undo</button>
+        </div>
+      </div>
+
+      <div class="section">
+        <h3>📚 COLORING BOOK</h3>
+        <div class="pages" id="pages">
+          <button class="page-btn active" data-page="cat"><span>🐱</span>Cat</button>
+          <button class="page-btn" data-page="rabbit"><span>🐰</span>Rabbit</button>
+          <button class="page-btn" data-page="butterfly"><span>🦋</span>Butterfly</button>
+          <button class="page-btn" data-page="fish"><span>🐠</span>Fish</button>
+          <button class="page-btn" data-page="flower"><span>🌻</span>Flower</button>
+          <button class="page-btn" data-page="house"><span>🏠</span>House</button>
+          <button class="page-btn" data-page="rainbow"><span>🌈</span>Rainbow</button>
+          <button class="page-btn" data-page="star"><span>⭐</span>Star</button>
+          <button class="page-btn" data-page="heart"><span>❤️</span>Heart</button>
+        </div>
+      </div>
+
+      <button class="primary" id="download">⬇️ Download My Art</button>
+      <button class="btn secondary" id="blank">📝 Blank Page</button>
+      <button class="btn secondary" id="clear">🗑️ Clear Drawing</button>
+      <button class="btn secondary" id="reset">↻ Reset Page</button>
+
+    </aside>
+
+    <section class="canvas-area">
+
+      <div class="canvas-header">
+        <h2>🎨 My Art Board</h2>
+        <div class="actions">
+          <button class="btn" id="white">☀️ White</button>
+          <button class="btn" id="black">🌙 Dark</button>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="canvas-frame">
+          <canvas id="canvas" width="900" height="670"></canvas>
+        </div>
+      </div>
+
+      <div class="tip">
+        💖 Touch or click and drag to draw!
+      </div>
+
+    </section>
+
+  </div>
+</main>
+
+<footer>Made with 💜 for Little Artists Everywhere</footer>
+
+<script>
+const canvas=document.getElementById("canvas");
+const ctx=canvas.getContext("2d",{willReadFrequently:true});
+const W=900,H=670;
+
+let color="#ff3b5c",size=8,tool="brush";
+let drawing=false,last=null;
+let history=[];
+let page="cat",bg="#ffffff",blank=false;
+
+const palette=[
+"#ff3b5c","#ff8a32","#ffd43b","#8ddc4c",
+"#21c8a5","#35a7ff","#6375ef","#a36bed",
+"#f38ac8","#9b5c38","#242424","#ffffff",
+"#ffc6a5","#9ce6e9","#d9b4ff"
+];
+
+const colors=document.getElementById("colors");
+
+palette.forEach(c=>{
+ const b=document.createElement("button");
+ b.className="swatch"+(c===color?" active":"");
+ b.style.background=c;
+ b.onclick=()=>setColor(c,b);
+ colors.appendChild(b);
+});
+
+function setColor(c,el){
+ color=c;
+ document.querySelectorAll(".swatch").forEach(x=>x.classList.remove("active"));
+ if(el)el.classList.add("active");
+ document.getElementById("customColor").value=c;
+}
+
+document.getElementById("customColor").oninput=e=>setColor(e.target.value);
+
+document.getElementById("size").oninput=e=>{
+ size=+e.target.value;
+ document.getElementById("sizeText").textContent=size+" px";
+};
+
+function setTool(t){
+ tool=t;
+ ["brush","eraser","bucket"].forEach(id=>{
+  document.getElementById(id).classList.toggle("active",id===t);
+ });
+ canvas.style.cursor=t==="bucket"?"cell":"crosshair";
+}
+
+["brush","eraser","bucket"].forEach(id=>{
+ document.getElementById(id).onclick=()=>setTool(id);
+});
+
+function save(){
+ if(history.length>=15)history.shift();
+ history.push(ctx.getImageData(0,0,W,H));
+}
+function undo(){
+ if(history.length)ctx.putImageData(history.pop(),0,0);
+}
+document.getElementById("undo").onclick=undo;
+
+function background(){
+ ctx.fillStyle=bg;
+ ctx.fillRect(0,0,W,H);
+}
+function line(x1,y1,x2,y2){
+ ctx.beginPath();
+ ctx.moveTo(x1,y1);
+ ctx.lineTo(x2,y2);
+ ctx.stroke();
+}
+function circle(x,y,r){
+ ctx.beginPath();
+ ctx.arc(x,y,r,0,Math.PI*2);
+ ctx.stroke();
+}
+function ellipse(x,y,rx,ry){
+ ctx.beginPath();
+ ctx.ellipse(x,y,rx,ry,0,0,Math.PI*2);
+ ctx.stroke();
+}
+function path(points){
+ ctx.beginPath();
+ ctx.moveTo(...points[0]);
+ points.slice(1).forEach(p=>ctx.lineTo(...p));
+ ctx.closePath();
+ ctx.stroke();
+}
+function shape(fn){
+ ctx.strokeStyle="#34303c";
+ ctx.lineWidth=7;
+ ctx.lineJoin="round";
+ ctx.lineCap="round";
+ fn();
+}
+
+function drawPage(name){
+ page=name;
+ blank=false;
+ background();
+
+ shape(()=>{
+ if(name==="cat"){
+  path([[295,230],[320,90],[430,185]]);
+  path([[470,185],[580,90],[605,230]]);
+  ellipse(450,310,175,155);
+  circle(385,290,10);circle(515,290,10);
+  path([[438,330],[450,342],[462,330]]);
+  line(450,342,450,365);
+  path([[450,365],[425,380],[405,365]]);
+  path([[450,365],[475,380],[495,365]]);
+  line(290,335,390,345);line(510,345,610,335);
+  line(295,375,390,365);line(510,365,605,375);
+  ellipse(450,545,120,90);
+  ctx.beginPath();ctx.moveTo(550,530);
+  ctx.bezierCurveTo(700,510,680,400,620,445);ctx.stroke();
+  ellipse(390,620,42,23);ellipse(510,620,42,23);
+ }
+ if(name==="rabbit"){
+  ellipse(380,190,52,130);ellipse(520,190,52,130);
+  ellipse(450,365,165,145);
+  circle(395,345,10);circle(505,345,10);
+  circle(450,385,10);
+  path([[450,395],[425,415],[405,405]]);
+  path([[450,395],[475,415],[495,405]]);
+  circle(420,455,25);circle(480,455,25);
+  ellipse(450,565,110,55);
+ }
+ if(name==="butterfly"){
+  ctx.beginPath();ctx.ellipse(325,300,140,180,-.5,0,Math.PI*2);ctx.stroke();
+  ctx.beginPath();ctx.ellipse(575,300,140,180,.5,0,Math.PI*2);ctx.stroke();
+  ctx.beginPath();ctx.ellipse(340,495,105,100,.5,0,Math.PI*2);ctx.stroke();
+  ctx.beginPath();ctx.ellipse(560,495,105,100,-.5,0,Math.PI*2);ctx.stroke();
+  ellipse(450,390,35,150);
+  circle(435,220,9);circle(465,220,9);
+  path([[445,240],[400,180]]);path([[455,240],[500,180]]);
+ }
+ if(name==="fish"){
+  ctx.beginPath();ctx.ellipse(430,340,175,115,0,0,Math.PI*2);ctx.stroke();
+  path([[590,340],[735,235],[735,445]]);
+  circle(320,310,12);
+  path([[390,340],[450,300],[480,340],[450,380]]);
+  path([[400,450],[450,500],[500,450]]);
+ }
+ if(name==="flower"){
+  for(let i=0;i<8;i++){
+   ctx.save();ctx.translate(450,280);ctx.rotate(i*Math.PI/4);
+   ellipse(0,-100,50,90);ctx.restore();
+  }
+  circle(450,280,65);
+  line(450,345,450,600);
+  ellipse(385,485,65,28);ellipse(515,530,65,28);
+ }
+ if(name==="house"){
+  path([[180,330],[450,110],[720,330]]);
+  path([[235,310],[235,600],[665,600],[665,310]]);
+  path([[385,600],[385,435],[510,435],[510,600]]);
+  ctx.strokeRect(285,365,80,80);
+  ctx.strokeRect(540,365,80,80);
+  line(325,365,325,445);line(285,405,365,405);
+ }
+ if(name==="rainbow"){
+  for(let r=300;r>=100;r-=40){
+   ctx.beginPath();ctx.arc(450,570,r,Math.PI,Math.PI*2);ctx.stroke();
+  }
+  ellipse(150,530,70,38);ellipse(750,530,70,38);
+ }
+ if(name==="star"){
+  let pts=[];
+  for(let i=0;i<10;i++){
+   let r=i%2===0?235:105;
+   let a=-Math.PI/2+i*Math.PI/5;
+   pts.push([450+Math.cos(a)*r,340+Math.sin(a)*r]);
+  }
+  path(pts);circle(450,340,65);
+ }
+ if(name==="heart"){
+  ctx.beginPath();
+  ctx.moveTo(450,575);
+  ctx.bezierCurveTo(390,510,180,370,280,225);
+  ctx.bezierCurveTo(350,120,450,205,450,265);
+  ctx.bezierCurveTo(450,205,550,120,620,225);
+  ctx.bezierCurveTo(720,370,510,510,450,575);
+  ctx.stroke();
+ }
+ });
+}
+
+function choosePage(name){
+ history=[];
+ bg="#ffffff";
+ drawPage(name);
+ document.querySelectorAll(".page-btn").forEach(b=>{
+  b.classList.toggle("active",b.dataset.page===name);
+ });
+}
+
+document.getElementById("pages").onclick=e=>{
+ const b=e.target.closest("[data-page]");
+ if(b)choosePage(b.dataset.page);
+};
+
+document.getElementById("blank").onclick=()=>{
+ history=[];
+ blank=true;
+ background();
+ document.querySelectorAll(".page-btn").forEach(b=>b.classList.remove("active"));
+};
+
+document.getElementById("reset").onclick=()=>{
+ history=[];
+ bg="#ffffff";
+ drawPage(page);
+};
+
+document.getElementById("clear").onclick=()=>{
+ save();background();
+};
+
+function position(e){
+ const r=canvas.getBoundingClientRect();
+ return {
+  x:(e.clientX-r.left)*W/r.width,
+  y:(e.clientY-r.top)*H/r.height
+ };
+}
+
+function start(e){
+ if(e.pointerType==="mouse"&&e.button!==0)return;
+ e.preventDefault();
+ const p=position(e);
+
+ if(tool==="bucket"){
+  save();
+  fill(p.x|0,p.y|0,color);
+  return;
+ }
+
+ save();
+ drawing=true;
+ last=p;
+ canvas.setPointerCapture(e.pointerId);
+ ctx.beginPath();
+ ctx.arc(p.x,p.y,size/2,0,Math.PI*2);
+ ctx.fillStyle=tool==="eraser"?bg:color;
+ ctx.fill();
+}
+
+function move(e){
+ if(!drawing)return;
+ e.preventDefault();
+ const p=position(e);
+ ctx.beginPath();
+ ctx.moveTo(last.x,last.y);
+ ctx.lineTo(p.x,p.y);
+ ctx.strokeStyle=tool==="eraser"?bg:color;
+ ctx.lineWidth=size;
+ ctx.lineCap="round";
+ ctx.lineJoin="round";
+ ctx.stroke();
+ last=p;
+}
+
+function stop(){
+ drawing=false;
+ last=null;
+}
+
+canvas.addEventListener("pointerdown",start);
+canvas.addEventListener("pointermove",move);
+canvas.addEventListener("pointerup",stop);
+canvas.addEventListener("pointercancel",stop);
+canvas.addEventListener("lostpointercapture",stop);
+
+// Flood fill with tolerance and pixel limit.
+function fill(sx,sy,c){
+ const img=ctx.getImageData(0,0,W,H),d=img.data;
+ const start=(sy*W+sx)*4;
+ const target=[d[start],d[start+1],d[start+2],d[start+3]];
+ const hex=c.slice(1);
+ const fc=[parseInt(hex.slice(0,2),16),parseInt(hex.slice(2,4),16),parseInt(hex.slice(4,6),16),255];
+ const match=i=>Math.abs(d[i]-target[0])<25&&
+ Math.abs(d[i+1]-target[1])<25&&
+ Math.abs(d[i+2]-target[2])<25&&
+ Math.abs(d[i+3]-target[3])<25;
+ if(target.every((v,i)=>v===fc[i]))return;
+ const stack=[start];
+ let count=0;
+ while(stack.length&&count<250000){
+  const i=stack.pop();
+  if(i<0||i>=d.length||!match(i))continue;
+  d[i]=fc[0];d[i+1]=fc[1];d[i+2]=fc[2];d[i+3]=255;
+  const x=(i/4)%W;
+  if(x>0)stack.push(i-4);
+  if(x<W-1)stack.push(i+4);
+  if(i>=W*4)stack.push(i-W*4);
+  if(i<(H-1)*W*4)stack.push(i+W*4);
+  count++;
+ }
+ ctx.putImageData(img,0,0);
+}
+
+document.getElementById("white").onclick=()=>{
+ save();bg="#ffffff";background();
+};
+document.getElementById("black").onclick=()=>{
+ save();bg="#202438";background();
+};
+
+document.getElementById("download").onclick=()=>{
+ const out=document.createElement("canvas");
+ out.width=W;out.height=H;
+ const o=out.getContext("2d");
+ o.fillStyle=bg;o.fillRect(0,0,W,H);
+ o.drawImage(canvas,0,0);
+ const a=document.createElement("a");
+ a.download="My-Little-Art.png";
+ a.href=out.toDataURL("image/png");
+ a.click();
+};
+
+// Initial artwork
+choosePage("cat");
+</script>
+
+</body>
+</html>
